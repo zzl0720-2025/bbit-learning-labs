@@ -12,28 +12,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Copyright 2024 Bloomberg Finance L.P.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# ...
+
 import argparse
 import sys
 
 from solution.consumer_sol import mqConsumer  # pylint: disable=import-error
 
+
 def main(sector: str, queueName: str) -> None:
-    
-    # Implement Logic to Create Binding Key from the ticker and sector variable -  Step 2
-    #
-    #                       WRITE CODE HERE!!!
-    #
-    
-    consumer = mqConsumer(binding_key=bindingKey,exchange_name="Tech Lab Topic Exchange",queue_name=queueName)    
+    bindingKey = f"stock.{sector}.*"
+
+    consumer = mqConsumer(
+        binding_key=bindingKey,
+        exchange_name="Tech Lab Topic Exchange",
+        queue_name=queueName
+    )
     consumer.startConsuming()
-    
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("sector", type=str)
+    parser.add_argument("queue", type=str)
 
-    # Implement Logic to read the sector and queueName string from the command line and save them - Step 1
-    #
-    #                       WRITE CODE HERE!!!
-    #
+    args = parser.parse_args()
 
-    sys.exit(main(sector,queue))
+    sector = args.sector
+    queue = args.queue
+
+    sys.exit(main(sector, queue))

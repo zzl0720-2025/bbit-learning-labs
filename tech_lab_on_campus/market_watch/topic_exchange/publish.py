@@ -12,6 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Copyright 2024 Bloomberg Finance L.P.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# ...
+
 import argparse
 import sys
 
@@ -19,29 +24,27 @@ from solution.producer_sol import mqProducer  # pylint: disable=import-error
 
 
 def main(ticker: str, price: float, sector: str) -> None:
-    
-    # Implement Logic to Create Routing Key from the ticker and sector variable -  Step 2
-    #
-    #                       WRITE CODE HERE!!!
-    #
+    routingKey = f"stock.{sector}.{ticker}"
 
+    producer = mqProducer(
+        routing_key=routingKey,
+        exchange_name="Tech Lab Topic Exchange"
+    )
 
-    producer = mqProducer(routing_key=routingKey,exchange_name="Tech Lab Topic Exchange")
-
-
-    # Implement Logic To Create a message variable from the variable EG. "TSLA price is now $500" - Step 3
-    #
-    #                       WRITE CODE HERE!!!
-    #
-    
-    
+    message = f"{ticker} is ${price}"
     producer.publishOrder(message)
 
+
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("ticker", type=str)
+    parser.add_argument("price", type=float)
+    parser.add_argument("sector", type=str)
 
-    # Implement Logic to read the ticker, price and sector string from the command line and save them - Step 1
-    #
-    #                       WRITE CODE HERE!!!
-    #
+    args = parser.parse_args()
 
-    sys.exit(main(ticker,price,sector))
+    ticker = args.ticker
+    price = args.price
+    sector = args.sector
+
+    sys.exit(main(ticker, price, sector))
